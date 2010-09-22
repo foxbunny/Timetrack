@@ -58,18 +58,22 @@ def getduration(seconds):
     seconds = seconds - minutes * 60
     return (hours, minutes, seconds)
 
-def read_stats(connection, pidfilter):
+def get_pids(connection):
+    """ Get unique PIDs from database """
     pids = []
+    c = connection.cursor()
+    c.execute("SELECT DISTINCT pid FROM timesheet ORDER BY pid ASC;")
+    for pid in c:
+        pids.append(pid[0])
+    c.close()
+    return pids
+
+def get_times(connection, pidfilter):
+    """ Return a dictionary of PIDs with [job, time] pairs """
     if pidfilter:
         pids = [pidfilter]
     else:
-        c = connection.cursor()
-        c.execute("SELECT DISTINCT pid FROM timesheet ORDER BY pid ASC;")
-        for pid in c:
-            pids.append(pid[0])
-        print pids
-        c.close()
-
+        pids = get_pids(connection)
     pid_times = {}
     for pid in pids:
         c = connection.cursor()
@@ -79,6 +83,10 @@ def read_stats(connection, pidfilter):
             results.append(result)
             pid_times[pid] = results
         c.close()
+    return pid_times
+
+def read_stats(connection, pidfilter):
+    pid_times = get_times(connection, pidfilter)
 
     for k in pid_times.keys():
         print ""
@@ -92,7 +100,17 @@ def read_stats(connection, pidfilter):
             print ""
         print "=========================="
         print ""
-    c.close()
+
+def export_tsv(connection, filename, pidfilter):
+    pid_times = get_times(connection, pidfilter)
+    
+    f = open(filename, 'w')
+    # Write header
+    f.write('PID\tJob\tTime\n')
+    for k in pid_times.keys():
+        for j in pid_times[k]:
+            f.write('%s\t%s\t%s\n' % (k, j[0], j[1]))
+    f.close()
 
 def clean_string(s):
     """ Escapes characters in a string for SQL """
@@ -143,12 +161,15 @@ def usage():
 Copyright (c) 2010, Branko Vukelic
 Released under GNU/GPL v3, see LICENSE file for details.
 
-Usage: tt.py [-a] [-r] [-p] [PID] [--add] [--read] [--pid PID] [dbfile]"
+Usage: tt.py [-a] [-r] [-t FILE] [-p PID] 
+             [--add] [--read] [--tsv FILE] [--pid PID] [dbfile]
 
 -r --read  : Display the stats.
 -a --add   : Start timer session (default action).
+-t --tsv   : Export into a tab-separated table (TSV). FILE is the filename to
+             use for exporting.
 -p --pid   : With argument 'PID' (3 letters, no numbers or non-alphanumeric
-             characters. Limits reads and writes to a single PID.
+             characters. Limits all operations to a single PID.
 dbfile     : Use this file as database, instead of default file. If the
              specified file does not exist, it will be creadted.
 
@@ -160,7 +181,7 @@ More information at:
 
 def main(argv):
     try:
-        opts, args = getopt.getopt(argv, 'rap:', ['read', 'add', 'pid='])
+        opts, args = getopt.getopt(argv, 'rat:p:', ['read', 'add', 'tsv=', 'pid='])
     except getopt.GetoptError:
         usage()
         sys.exit(2)
@@ -202,6 +223,9 @@ def main(argv):
 
     if ('-r' in optdict.keys()) or ('--read' in optdict.keys()):
         read_stats(connection, pidfilter)
+    elif ('-t' in optdict.keys()) or ('--tsv' in optdict.keys()):
+        filename = optdict.get('-t', None) or optdict.get('--tsv')
+        export_tsv(connection, filename, pidfilter)
     else:
         add_data(connection, pidfilter)
     
