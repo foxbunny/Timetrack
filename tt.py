@@ -143,10 +143,10 @@ def usage():
 Copyright (c) 2010, Branko Vukelic
 Released under GNU/GPL v3, see LICENSE file for details.
 
-Usage: tt.py [-w] [-r] [-p] [PID] [--write] [--read] [--pid PID] [dbfile]"
+Usage: tt.py [-a] [-r] [-p] [PID] [--add] [--read] [--pid PID] [dbfile]"
 
 -r --read  : Display the stats.
--w --write : Start timer session (default action).
+-a --add   : Start timer session (default action).
 -p --pid   : With argument 'PID' (3 letters, no numbers or non-alphanumeric
              characters. Limits reads and writes to a single PID.
 dbfile     : Use this file as database, instead of default file. If the
