@@ -63,8 +63,17 @@ To get the stats, execute Timetrack with ``--read`` or ``-r`` switch.
 
 To display the stats only for a single PID, use the ``--pid`` or ``-p`` switch.
 
+Exporting a TSV file
+--------------------
+
+You can use Timetrack to export a TSV (tab-separated values) file containing
+yoru stats. To do that, use a ``-t`` or ``--tsv`` option and specify a
+filename. For example:
+
+    tt.py -t foo.tsv
+
 Database location
-=================
+-----------------
 
 The default dabase is located in user's home directory (on Linux it is
 ``/home/username``, and on Windows it is ``C:\Documents and Settings\username``). 
@@ -78,7 +87,7 @@ For example:
 will use ``someother.db`` located in the same directory as ``tt.py``.
 
 License and Warranty
-====================
+--------------------
     
 Copyright (C)2010, Branko Vukelic
 
