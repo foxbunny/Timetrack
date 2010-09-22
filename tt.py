@@ -88,6 +88,10 @@ def get_times(connection, pidfilter):
 def read_stats(connection, pidfilter):
     pid_times = get_times(connection, pidfilter)
 
+    if not pid_times:
+        print "No data in database. Exiting."
+        return True
+
     for k in pid_times.keys():
         print ""
         print "=========================="
@@ -103,6 +107,10 @@ def read_stats(connection, pidfilter):
 
 def export_tsv(connection, filename, pidfilter):
     pid_times = get_times(connection, pidfilter)
+
+    if not pid_times:
+        print "No data in database. Exiting."
+        return True
     
     f = open(filename, 'w')
     # Write header
