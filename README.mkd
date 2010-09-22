@@ -1,0 +1,98 @@
+Timetrack: Simple Stupid Time Tracker
+=====================================
+
+Timetrack is a simple time tracker script written in Python. It asks for user
+input, starts the timer, and waits for user to press ``Enter``, then recors 
+the time in the database. It also retrieves the data and displays the sum
+totals by job descriptions.
+
+Requirements
+------------
+
+Timetrack will work on any system that has Python 2.7 and SQLite3 installed. It
+should also work on Python 2.6, but this has not been tested.
+
+Tracking time
+-------------
+
+To keep track of time, run ``tt.py`` when you start working. Enter the required
+data:
+
+* ``PID`` is a 3-letter (no numbers or any non-letter characters) identifier.
+  PID is used to identify a client. Since one of the goals of Timetrack was
+  speed of entry, 3-letter identifier was considered optimal.
+* ``Job`` is a textual description of the job. It is used as an identifier for
+  jobs when calculating total times, so it is a good idea to think of a common
+  description for all tasks related to a single project, and use it
+  consistently.
+
+Once all the details are filled in, timer is started. A prompt is displayed 
+asking the user to press ``Enter``. When the key is pressed, timer is stopped,
+and the time is written into the database.
+
+If you are expecting not to switch PID's between timings, you may use the
+``--pid`` or ``-p`` switch followed by a PID. This will make Timetrack not ask
+for a PID each time but use the specified PID. If you specify an invalid PID,
+it will be ignored, and Timetrack will operate as usual.
+
+To end a timetracking session, just type ``Ctrl+C``. Don't worry, it doesn't
+just kill the script. It also closes the database connection properly. ;)
+
+Reading stats
+-------------
+
+Stats are collected for PID-job combinations. The sum total of all times under
+a job, under a PID, are displayed. Display may look like this:
+
+    ==========================
+    PID: foo
+    ==========================
+    
+    
+    Job: bar1
+    Total duration: 02:03:01
+    
+    
+    Job: bar2
+    Total duration: 06:12:03
+    
+    
+    ==========================
+
+To get the stats, execute Timetrack with ``--read`` or ``-r`` switch.
+
+To display the stats only for a single PID, use the ``--pid`` or ``-p`` switch.
+
+Database location
+=================
+
+The default dabase is located in user's home directory (on Linux it is
+``/home/username``, and on Windows it is ``C:\Documents and Settings\username``). 
+The file name of the database file is ``timesheet.db``. You can use a different
+location by specifying the full or relative path as an argument to ``tt.py``.
+
+For example:
+
+    tt.py -r -p FOO someother.db
+
+will use ``someother.db`` located in the same directory as ``tt.py``.
+
+License and Warranty
+====================
+    
+Copyright (C)2010, Branko Vukelic
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see http://www.gnu.org/licenses/. 
+
+See the provided LICENSE file for details.
