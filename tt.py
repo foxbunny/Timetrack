@@ -142,7 +142,7 @@ def add_data(connection, pidfilter):
             if pid and desc:
                 timestamp, starttime = generate_timestamp()
             print "Timer started at %s" % timestamp
-            raw_input("Press Enter to stop the timer")
+            raw_input("Press Enter to stop the timer or Ctrl+C to abort")
             endtimestamp, endtime = generate_timestamp()
             print "Timer stopped at %s" % endtimestamp
             delta = endtime - starttime
