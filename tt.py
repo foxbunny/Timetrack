@@ -99,8 +99,8 @@ def read_stats(connection, pidfilter):
         print "=========================="
         print ""
         for j in pid_times[k]:
-            print "Job: %s" % j[0]
-            print "Total duration: %02d:%02d:%02d" % getduration(j[1])
+            print "Job:  %s" % j[0]
+            print "Time: %02d:%02d:%02d" % getduration(j[1])
             print ""
         print "=========================="
         print ""
